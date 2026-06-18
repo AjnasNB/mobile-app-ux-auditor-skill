@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mobile App UX Auditor"
+  short_description: "Audit and improve mobile app UI/UX flows"
+  default_prompt: "Use $mobile-app-ux-auditor to review this mobile app flow and propose practical UI/UX improvements."
