@@ -4,7 +4,7 @@
   "description": "Agent Skill for auditing and improving mobile app UI/UX flows across Flutter, React Native, iOS, and Android.",
   "license": "MIT",
   "author": {
-    "name": "ajnasnb",
+    "name": "Ajnas",
     "email": "ajnasnb@gmail.com"
   },
   "type": "commonjs",
@@ -39,12 +39,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ajnasnb/mobile-app-ux-auditor-skill.git"
+    "url": "git+https://github.com/AjnasNB/mobile-app-ux-auditor-skill.git"
   },
   "bugs": {
-    "url": "https://github.com/ajnasnb/mobile-app-ux-auditor-skill/issues"
+    "url": "https://github.com/AjnasNB/mobile-app-ux-auditor-skill/issues"
   },
-  "homepage": "https://github.com/ajnasnb/mobile-app-ux-auditor-skill#readme",
+  "homepage": "https://github.com/AjnasNB/mobile-app-ux-auditor-skill#readme",
   "publishConfig": {
     "access": "public"
   },

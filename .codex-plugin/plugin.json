@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "Agent Skill for auditing and improving mobile app UI/UX flows across Flutter, React Native, iOS, and Android.",
   "author": {
-    "name": "ajnasnb",
+    "name": "Ajnas",
     "email": "ajnasnb@gmail.com",
-    "url": "https://github.com/ajnasnb"
+    "url": "https://github.com/AjnasNB"
   },
-  "homepage": "https://github.com/ajnasnb/mobile-app-ux-auditor-skill",
-  "repository": "https://github.com/ajnasnb/mobile-app-ux-auditor-skill",
+  "homepage": "https://github.com/AjnasNB/mobile-app-ux-auditor-skill",
+  "repository": "https://github.com/AjnasNB/mobile-app-ux-auditor-skill",
   "license": "MIT",
   "keywords": [
     "ux",
@@ -25,14 +25,14 @@
     "displayName": "Mobile App UX Auditor",
     "shortDescription": "Audit mobile app UI/UX flows",
     "longDescription": "Review and improve mobile app navigation, onboarding, accessibility, platform-native fit, forms, retention, and state handling across Flutter, React Native, iOS, and Android.",
-    "developerName": "ajnasnb",
+    "developerName": "Ajnas",
     "category": "Development",
     "capabilities": [
       "Read",
       "Write",
       "Review"
     ],
-    "websiteURL": "https://github.com/ajnasnb/mobile-app-ux-auditor-skill",
+    "websiteURL": "https://github.com/AjnasNB/mobile-app-ux-auditor-skill",
     "defaultPrompt": [
       "Audit this mobile app UX flow.",
       "Improve this mobile onboarding.",

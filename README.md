@@ -1,6 +1,6 @@
 # Mobile App UX Auditor Skill
 
-A portable Agent Skill for auditing and improving mobile app UI/UX flows across Flutter, React Native, Swift/iOS, Kotlin, Java, Android Views, and Jetpack Compose.
+A portable Agent Skill by Ajnas for auditing and improving mobile app UI/UX flows across Flutter, React Native, Swift/iOS, Kotlin, Java, Android Views, and Jetpack Compose.
 
 Use it when you want an AI coding agent to inspect a mobile app, map real user flows, find UX friction, and propose or implement improvements with evidence instead of generic "make it cleaner" advice.
 
@@ -16,13 +16,18 @@ Use it when you want an AI coding agent to inspect a mobile app, map real user f
 
 ## Install globally
 
-After the npm package is published:
-
 ```bash
 npx mobile-app-ux-auditor-skill
 ```
 
-This installs the skill for the current user into:
+The installer asks where to install:
+
+1. Global current user: Claude Code, Codex, and shared Agent Skills.
+2. Current project: local skills plus adapter files for popular coding agents.
+3. Both global and current project.
+4. Custom project path.
+
+Global install copies the skill for the current user into:
 
 - `~/.claude/skills/mobile-app-ux-auditor`
 - `~/.agents/skills/mobile-app-ux-auditor`
@@ -79,6 +84,12 @@ Copy only the skill folders and skip adapter files:
 npx mobile-app-ux-auditor-skill --project . --no-adapters
 ```
 
+Skip prompts and force global install:
+
+```bash
+npx mobile-app-ux-auditor-skill --yes
+```
+
 ## Static scanner
 
 The skill includes a Python scanner for static mobile UX signals:
@@ -122,6 +133,21 @@ git remote add origin https://github.com/AjnasNB/mobile-app-ux-auditor-skill.git
 git push -u origin main
 ```
 
+## Download from npm
+
+Install and run without keeping the package:
+
+```bash
+npx mobile-app-ux-auditor-skill
+```
+
+Install the CLI globally:
+
+```bash
+npm install -g mobile-app-ux-auditor-skill
+mobile-app-ux-auditor
+```
+
 ## Publish to npm
 
 Log in once:
@@ -142,7 +168,7 @@ Publish:
 npm publish --access public
 ```
 
-After publishing, users install it with:
+After publishing, users download and install it with:
 
 ```bash
 npx mobile-app-ux-auditor-skill
