@@ -1,9 +1,9 @@
 {
   "name": "mobile-app-ux-auditor",
   "description": "Mobile app UI/UX audit skill for Flutter, React Native, iOS, Android, accessibility, onboarding, navigation, forms, retention, and platform-native flow improvements.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
-    "name": "Ajnas"
+    "name": "Ajnas NB"
   },
   "license": "MIT",
   "keywords": [

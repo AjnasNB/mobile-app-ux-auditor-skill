@@ -1,6 +1,6 @@
 # Mobile App UX Auditor Skill
 
-A portable Agent Skill by Ajnas for auditing and improving mobile app UI/UX flows across Flutter, React Native, Swift/iOS, Kotlin, Java, Android Views, and Jetpack Compose.
+A portable Agent Skill by Ajnas NB for auditing and improving mobile app UI/UX flows across Flutter, React Native, Swift/iOS, Kotlin, Java, Android Views, and Jetpack Compose.
 
 Use it when you want an AI coding agent to inspect a mobile app, map real user flows, find UX friction, and propose or implement improvements with evidence instead of generic "make it cleaner" advice.
 
@@ -17,10 +17,14 @@ Use it when you want an AI coding agent to inspect a mobile app, map real user f
 ## Install globally
 
 ```bash
-npx mobile-app-ux-auditor-skill
+npx mobile-app-ux-auditor-skill --global
 ```
 
-The installer asks where to install:
+An interactive terminal may omit the mode and choose from a prompt. Scripts, CI, and other
+noninteractive shells must pass `--global` and/or `--project`; a no-argument noninteractive run
+fails without writing files.
+
+The interactive installer asks where to install:
 
 1. Global current user: Claude Code, Codex, and shared Agent Skills.
 2. Current project: local skills plus adapter files for popular coding agents.
@@ -84,11 +88,24 @@ Copy only the skill folders and skip adapter files:
 npx mobile-app-ux-auditor-skill --project . --no-adapters
 ```
 
-Skip prompts and force global install:
+Skip prompts with an explicit global destination:
 
 ```bash
-npx mobile-app-ux-auditor-skill --yes
+npx mobile-app-ux-auditor-skill --global --yes
 ```
+
+Select global destinations explicitly:
+
+```bash
+npx mobile-app-ux-auditor-skill --global --targets claude,agents,codex-legacy
+```
+
+Project installs require an existing real directory. The installer rejects unknown options,
+missing values, ambiguous managed markers, and destination paths that traverse symbolic links,
+junctions, or reparse points. Adapter updates preserve user content and insert or replace only
+the block delimited by `<!-- mobile-app-ux-auditor:start -->` and
+`<!-- mobile-app-ux-auditor:end -->`. In particular, `.opencode/AGENTS.md` is never replaced as
+a whole file.
 
 ## Static scanner
 
@@ -99,6 +116,8 @@ python scripts/mobile_ux_static_scan.py /path/to/mobile-app
 ```
 
 The scanner detects review signals such as unlabeled custom controls, missing image labels, permission prompts, form-label risks, safe-area risks, and platform-specific accessibility gaps.
+
+Linked files and directories are skipped; resolved scan inputs must remain inside the selected root.
 
 It is a triage tool, not a replacement for expert review. Confirm every finding in code, simulator/device, screenshots, accessibility tooling, or tests before changing behavior.
 
@@ -138,14 +157,14 @@ git push -u origin main
 Install and run without keeping the package:
 
 ```bash
-npx mobile-app-ux-auditor-skill
+npx mobile-app-ux-auditor-skill --global
 ```
 
 Install the CLI globally:
 
 ```bash
 npm install -g mobile-app-ux-auditor-skill
-mobile-app-ux-auditor
+mobile-app-ux-auditor --global
 ```
 
 ## Publish to npm
@@ -159,7 +178,8 @@ npm adduser
 Check the package:
 
 ```bash
-npm publish --dry-run --access public
+npm ci
+npm run release:check
 ```
 
 Publish:
@@ -171,7 +191,7 @@ npm publish --access public
 After publishing, users download and install it with:
 
 ```bash
-npx mobile-app-ux-auditor-skill
+npx mobile-app-ux-auditor-skill --global
 ```
 
 Or install the CLI globally:
@@ -180,6 +200,9 @@ Or install the CLI globally:
 npm install -g mobile-app-ux-auditor-skill
 mobile-app-ux-auditor --global
 ```
+
+See `SECURITY.md` for vulnerability reporting. The repository-only `RELEASING.md` contains the
+maintainer checklist and is intentionally excluded from the npm tarball.
 
 ## License
 

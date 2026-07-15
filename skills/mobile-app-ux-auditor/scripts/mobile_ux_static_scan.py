@@ -179,27 +179,42 @@ PATTERNS = [
 ]
 
 
+def contained_path(root: Path, candidate: Path) -> Path | None:
+    """Resolve a non-linked path only when it remains under the scan root."""
+    try:
+        if candidate.is_symlink():
+            return None
+        resolved = candidate.resolve(strict=True)
+        resolved.relative_to(root)
+        return resolved
+    except (OSError, RuntimeError, ValueError):
+        return None
+
+
 def iter_files(root: Path) -> Iterable[Path]:
     for path in root.rglob("*"):
-        if path.is_dir():
+        resolved = contained_path(root, path)
+        if resolved is None or not resolved.is_file():
             continue
-        if any(part in EXCLUDE_DIRS for part in path.parts):
+        relative = resolved.relative_to(root)
+        if any(part in EXCLUDE_DIRS for part in relative.parts):
             continue
-        if path.suffix.lower() not in EXTENSIONS:
+        if resolved.suffix.lower() not in EXTENSIONS:
             continue
-        if path.stat().st_size > 1_000_000:
+        if resolved.stat().st_size > 1_000_000:
             continue
-        yield path
+        yield resolved
 
 
-def detect_stack(root: Path) -> list[str]:
+def detect_stack(root: Path, files: list[Path]) -> list[str]:
     stack: list[str] = []
-    if (root / "pubspec.yaml").exists():
+    if contained_path(root, root / "pubspec.yaml") is not None:
         stack.append("Flutter")
     package_json = root / "package.json"
-    if package_json.exists():
+    safe_package_json = contained_path(root, package_json)
+    if safe_package_json is not None and safe_package_json.is_file():
         try:
-            data = json.loads(package_json.read_text(encoding="utf-8"))
+            data = json.loads(safe_package_json.read_text(encoding="utf-8"))
             deps = " ".join(
                 list((data.get("dependencies") or {}).keys())
                 + list((data.get("devDependencies") or {}).keys())
@@ -210,13 +225,13 @@ def detect_stack(root: Path) -> list[str]:
                 stack.append("Expo")
         except Exception:
             stack.append("package.json present, unreadable")
-    if list(root.rglob("*.swift")):
+    if any(path.suffix.lower() == ".swift" for path in files):
         stack.append("Swift/iOS")
-    if list(root.rglob("*.kt")) or list(root.rglob("*.java")):
+    if any(path.suffix.lower() in {".kt", ".java"} for path in files):
         stack.append("Android Kotlin/Java")
-    if (root / "android").exists():
+    if (safe_android := contained_path(root, root / "android")) is not None and safe_android.is_dir():
         stack.append("Android project")
-    if (root / "ios").exists():
+    if (safe_ios := contained_path(root, root / "ios")) is not None and safe_ios.is_dir():
         stack.append("iOS project")
     return sorted(set(stack)) or ["Unknown mobile stack"]
 
@@ -239,9 +254,9 @@ def global_findings(root: Path, stack: list[str], all_text: str) -> list[Finding
 
 
 def scan(root: Path) -> tuple[list[str], list[Finding], int]:
-    stack = detect_stack(root)
     findings: list[Finding] = []
     files = list(iter_files(root))
+    stack = detect_stack(root, files)
     snippets: list[str] = []
     for file_path in files:
         rel = file_path.relative_to(root).as_posix()
@@ -309,6 +324,8 @@ def main() -> int:
     root = Path(args.root).resolve()
     if not root.exists():
         raise SystemExit(f"Path does not exist: {root}")
+    if not root.is_dir():
+        raise SystemExit(f"Path is not a directory: {root}")
     stack, findings, file_count = scan(root)
     print(render_markdown(root, stack, findings, file_count))
     return 0

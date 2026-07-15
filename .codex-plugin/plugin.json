@@ -1,9 +1,9 @@
 {
   "name": "mobile-app-ux-auditor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Agent Skill for auditing and improving mobile app UI/UX flows across Flutter, React Native, iOS, and Android.",
   "author": {
-    "name": "Ajnas",
+    "name": "Ajnas NB",
     "email": "ajnasnb@gmail.com",
     "url": "https://github.com/AjnasNB"
   },
@@ -25,7 +25,7 @@
     "displayName": "Mobile App UX Auditor",
     "shortDescription": "Audit mobile app UI/UX flows",
     "longDescription": "Review and improve mobile app navigation, onboarding, accessibility, platform-native fit, forms, retention, and state handling across Flutter, React Native, iOS, and Android.",
-    "developerName": "Ajnas",
+    "developerName": "Ajnas NB",
     "category": "Development",
     "capabilities": [
       "Read",
