@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add structured JSON output for automated audit pipelines.
+- Flag disabled font scaling, risky single-line labels, constrained Dynamic Type, and autoplay-style React Native video configuration.
+- Require media lifecycle, single-caption, interruption, offline, resume, phone, tablet, foldable, and large-text verification where applicable.
+
 ## 0.2.0 - 2026-07-15
 
 - Require explicit install modes in noninteractive environments.

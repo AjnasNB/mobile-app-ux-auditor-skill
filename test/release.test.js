@@ -278,6 +278,33 @@ test("static scanner runs against a fixture", (t) => {
   if (linked) assert.doesNotMatch(result.stdout, /LEAK_SENTINEL/);
 });
 
+test("static scanner reports media and text-scaling signals as JSON", (t) => {
+  const fixture = temporaryDirectory(t, "mobile-auditor-scanner-json");
+  fs.writeFileSync(path.join(fixture, "package.json"), JSON.stringify({ dependencies: { "react-native": "1.0.0" } }));
+  fs.writeFileSync(
+    path.join(fixture, "App.tsx"),
+    [
+      "<Text allowFontScaling={false}>Fixed</Text>;",
+      "<Text numberOfLines={1}>Potentially long localized title</Text>;",
+      "<Video paused={false} source={source} />;",
+      "<SafeAreaView />;"
+    ].join("\n")
+  );
+  const python = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
+  const result = spawnSync(
+    python,
+    [path.join(packageRoot, "scripts", "mobile_ux_static_scan.py"), fixture, "--format", "json"],
+    { encoding: "utf8" }
+  );
+  assert.equal(result.status, 0, result.stderr);
+  const report = JSON.parse(result.stdout);
+  assert.deepEqual(report.detectedStack, ["React Native"]);
+  assert.equal(report.counts.P1 >= 2, true);
+  assert.equal(report.counts.P2 >= 1, true);
+  assert.equal(report.findings.some((finding) => finding.title === "Font scaling is explicitly disabled"), true);
+  assert.equal(report.findings.some((finding) => finding.title === "Video appears configured to start automatically"), true);
+});
+
 test("dry package contains only the intended lean payload", () => {
   const npmCli = process.env.npm_execpath;
   const npmArgs = ["pack", "--dry-run", "--json", "--ignore-scripts"];

@@ -27,6 +27,7 @@ Audit mobile apps by mapping real user flows, finding friction with evidence, an
    - P3: Polish, delight, or instrumentation improvement.
 7. When editing code, preserve the app's existing architecture and design system. Prefer native platform components and established navigation/accessibility APIs over custom controls unless the product has a clear reason.
 8. Verify with the best available evidence: emulator/simulator walkthrough, screenshots, accessibility scanner, VoiceOver/TalkBack, widget/UI tests, route tests, or static inspection. State any verification that could not be run.
+9. For media or long-running tasks, verify one complete lifecycle: launch, play/start, pause, background, interruption, resume, completion, and recovery after process or network loss. Confirm captions and spoken text are not rendered twice.
 
 ## Quality Bar
 
@@ -37,6 +38,8 @@ Hold the output to a senior mobile product design engineer standard:
 - The UI has one coherent design system: typography scale, spacing rhythm, radius rules, color roles, interaction states, motion, density, and platform adaptation.
 - Accessibility is built into labels, roles, states, focus order, target size, screen reader output, dynamic type/font scaling, contrast, and reduced-motion behavior.
 - Mobile performance is UX: launch time, route transitions, jank, unnecessary re-renders, heavy images, blocked gestures, keyboard latency, and battery cost all matter.
+- Adaptive verification covers a compact phone, a large-text phone, a tablet or foldable layout when supported, keyboard-open state, and foreground/background restoration.
+- Media has intentional playback, visible controls, one caption presentation, screen-reader labels, audio-focus handling, and a useful transcript or equivalent when required.
 - Retention comes from saved progress, useful reminders, reduced effort, trust, and repeated value. Do not optimize for addiction.
 
 ## Output Format
@@ -48,6 +51,7 @@ Start with findings, not praise. Include:
 - Framework-specific implementation notes for Flutter, React Native, Swift/iOS, or Android as applicable.
 - Static scan findings from `scripts/mobile_ux_static_scan.py` when code is available.
 - Accessibility and adaptive-layout checks.
+- Media, interruption, offline, and resume-state checks when those capabilities exist.
 - Verification performed and remaining risks.
 
 When asked to improve the app directly, implement the smallest high-impact changes first, then report changed files and validation.
