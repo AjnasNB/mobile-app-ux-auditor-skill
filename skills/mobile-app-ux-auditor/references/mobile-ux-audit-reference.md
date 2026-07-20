@@ -40,6 +40,8 @@ Use this order before proposing changes:
 6. **Implementation response**: smallest code changes that improve completion and preserve platform conventions.
 7. **Verification**: prove the new flow works with at least one realistic path and one failure/interruption path.
 
+For media, uploads, navigation, payments, and other resumable work, treat the app lifecycle as part of the flow: foreground, background, interruption, process recreation, network loss, and return from a deep link or notification.
+
 Do not invent a celebrity-designer persona. Adopt the discipline: evidence, taste, consistency, accessibility, and verification.
 
 ## Scorecard
@@ -90,6 +92,7 @@ Run the bundled scanner when available:
 
 ```bash
 python scripts/mobile_ux_static_scan.py .
+python scripts/mobile_ux_static_scan.py . --format json
 ```
 
 Then produce:
@@ -147,6 +150,16 @@ Then produce:
 - Offline states should preserve read/write where feasible and sync later.
 - Confirm critical success states; do not leave users guessing after payment, booking, upload, or submission.
 
+### Media, Audio, and Resume Behavior
+
+- Playback begins from an intentional user action unless silent preview is a proven product requirement.
+- Play, pause, seek, mute, captions, playback position, and completion state remain reachable by touch and assistive technology.
+- Show one caption presentation. When captions are burned into the video, do not also enable the matching external track by default.
+- Preserve position through backgrounding, audio interruptions, route changes, and process recreation when the product promises resume.
+- Cooperate with platform audio focus, silent mode, Bluetooth or headphone changes, and lock-screen or system media controls when applicable.
+- Verify one real device or emulator path with VoiceOver or TalkBack, large text, reduced motion, offline recovery, and an interruption such as audio-focus loss.
+- Provide a transcript or equivalent text access for information-bearing media when captions alone are insufficient.
+
 ### Visual Hierarchy and Interaction
 
 - Design for scan order: the most important content/action appears where the platform and reading direction make it easiest to find.
@@ -174,6 +187,7 @@ Then produce:
 - Avoid stretching phone layouts across tablets. Use extra width for supporting panes, sidebars, multi-column content, or detail views.
 - Preserve state across rotation, resize, split-screen, process death, and app resume.
 - Test RTL languages and long localized strings if the app is localized.
+- Test the largest supported accessibility text size. Do not accept clipped controls, hidden primary actions, or content made unreachable by forced single-line labels.
 
 ### Ethical Retention and Engagement
 

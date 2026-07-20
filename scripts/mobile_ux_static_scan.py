@@ -60,6 +60,30 @@ PATTERNS = [
         "P1",
         "React Native",
         "Accessibility",
+        "Font scaling is explicitly disabled",
+        re.compile(r"allowFontScaling\s*=\s*\{\s*false\s*\}", re.I),
+        "Keep system font scaling enabled and verify the screen at the largest supported accessibility size.",
+    ),
+    (
+        "P2",
+        "React Native",
+        "Adaptive text",
+        "Single-line text may truncate at larger font sizes",
+        re.compile(r"<Text\b[^>\n]*numberOfLines\s*=\s*\{?\s*1\s*\}?", re.I),
+        "Confirm the label remains understandable with large text and localization, or allow wrapping where the layout permits.",
+    ),
+    (
+        "P1",
+        "React Native",
+        "Media",
+        "Video appears configured to start automatically",
+        re.compile(r"<(?:Video|AVPlayback|VideoView)\b[^>\n]*(?:autoPlay|shouldPlay|paused\s*=\s*\{\s*false\s*\})", re.I),
+        "Require an intentional play action, expose pause and seek controls, respect reduced motion, and restore state after interruption.",
+    ),
+    (
+        "P1",
+        "React Native",
+        "Accessibility",
         "Touchable/Pressable likely missing role or label",
         re.compile(r"<(?:Pressable|TouchableOpacity|TouchableHighlight|TouchableWithoutFeedback)\b(?![^>\n]*accessibility(?:Role|Label))", re.I),
         "Add accessibilityRole, accessibilityLabel, accessibilityState, and keyboard/screen-reader behavior.",
@@ -106,6 +130,14 @@ PATTERNS = [
     ),
     (
         "P1",
+        "Flutter",
+        "Adaptive text",
+        "Text scaling is explicitly disabled or replaced",
+        re.compile(r"textScaleFactor\s*:\s*1(?:\.0)?\b|TextScaler\.noScaling", re.I),
+        "Honor the platform text scale and verify reflow at large accessibility sizes instead of forcing a fixed scale.",
+    ),
+    (
+        "P1",
         "Swift/iOS",
         "Accessibility",
         "Image likely missing accessibility label",
@@ -127,6 +159,14 @@ PATTERNS = [
         "Permission request needs value-first timing",
         re.compile(r"requestAuthorization|requestWhenInUseAuthorization|requestAlwaysAuthorization", re.I),
         "Verify permission is requested at the moment of user intent and has a clear rationale.",
+    ),
+    (
+        "P2",
+        "Swift/iOS",
+        "Adaptive text",
+        "Dynamic Type range is constrained",
+        re.compile(r"\.dynamicTypeSize\s*\([^\n]*(?:through|\.\.\.)", re.I),
+        "Confirm the upper bound is necessary and that the same content remains available at accessibility sizes.",
     ),
     (
         "P1",
@@ -316,9 +356,25 @@ def render_markdown(root: Path, stack: list[str], findings: list[Finding], file_
     return "\n".join(out)
 
 
+def render_json(root: Path, stack: list[str], findings: list[Finding], file_count: int) -> str:
+    counts = {key: sum(1 for item in findings if item.severity == key) for key in ("P0", "P1", "P2", "P3")}
+    return json.dumps(
+        {
+            "root": str(root),
+            "filesScanned": file_count,
+            "detectedStack": stack,
+            "counts": counts,
+            "findings": [item.__dict__ for item in findings],
+            "notice": "Static scan output is a triage signal. Confirm every finding in the app or code before changing behavior.",
+        },
+        indent=2,
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Scan a mobile app for static UX review signals.")
     parser.add_argument("root", nargs="?", default=".", help="Project root or subdirectory to scan")
+    parser.add_argument("--format", choices=("markdown", "json"), default="markdown", help="Output format")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
@@ -327,7 +383,10 @@ def main() -> int:
     if not root.is_dir():
         raise SystemExit(f"Path is not a directory: {root}")
     stack, findings, file_count = scan(root)
-    print(render_markdown(root, stack, findings, file_count))
+    if args.format == "json":
+        print(render_json(root, stack, findings, file_count))
+    else:
+        print(render_markdown(root, stack, findings, file_count))
     return 0
 
 
